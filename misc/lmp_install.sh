@@ -11,6 +11,7 @@ cd ../../build
 
 cmake \
 \
+-D CMAKE_INSTALL_PREFIX=~/.local \
 -D CMAKE_BUILD_TYPE=Release \
 -D PKG_OPT=on \
 -D BUILD_OMP=on \
