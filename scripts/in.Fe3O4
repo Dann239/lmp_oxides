@@ -25,7 +25,7 @@ timestep	0.20
 thermo_style	custom step temp etotal press
 thermo		${out}
 
-dump		ovito all atom ${out} dump.atom
+#dump		ovito all atom ${out} dump.atom
 
 fix		verle all nve
 fix		reax all qeq/reax 1 0.0 10.0 1.0e-6 reax/c
