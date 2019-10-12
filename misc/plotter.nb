@@ -1,0 +1,117 @@
+(* Content-type: application/vnd.wolfram.mathematica *)
+
+(*** Wolfram Notebook File ***)
+(* http://www.wolfram.com/nb *)
+
+(* CreatedBy='Mathematica 12.0' *)
+
+(*CacheID: 234*)
+(* Internal cache information:
+NotebookFileLineBreakTest
+NotebookFileLineBreakTest
+NotebookDataPosition[       158,          7]
+NotebookDataLength[      3907,        109]
+NotebookOptionsPosition[      3611,         96]
+NotebookOutlinePosition[      3954,        111]
+CellTagsIndexPosition[      3911,        108]
+WindowFrame->Normal*)
+
+(* Beginning of Notebook Content *)
+Notebook[{
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"files", " ", "=", " ", 
+   RowBox[{"FileNames", "[", 
+    RowBox[{"\"\<../output_500/output*.csv\>\"", ",", 
+     RowBox[{"NotebookDirectory", "[", "]"}]}], "]"}]}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"raw", "=", 
+   RowBox[{"Import", "/@", "files"}]}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"raw", "=", 
+   RowBox[{
+    RowBox[{
+     RowBox[{
+      RowBox[{"Reap", "[", 
+       RowBox[{"#", "/.", 
+        RowBox[{"l_List", "\[RuleDelayed]", 
+         RowBox[{
+          RowBox[{"Sow", "[", "l", "]"}], "/;", 
+          RowBox[{
+           RowBox[{"Length", "[", "l", "]"}], "\[Equal]", "3"}]}]}]}], "]"}], 
+      "\[LeftDoubleBracket]", "2", "\[RightDoubleBracket]"}], "&"}], "/@", 
+    "raw"}]}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"raw", "=", 
+   RowBox[{"raw", "\[LeftDoubleBracket]", 
+    RowBox[{";;", ",", "1"}], "\[RightDoubleBracket]"}]}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"data", "[", "i_", "]"}], ":=", 
+  RowBox[{
+   RowBox[{
+    RowBox[{"(", 
+     RowBox[{"Around", "[", 
+      RowBox[{
+       RowBox[{
+        RowBox[{"Total", "[", "#", "]"}], "/", 
+        RowBox[{"Length", "[", "#", "]"}]}], ",", 
+       RowBox[{"Sqrt", "[", 
+        RowBox[{"Variance", "[", "#", "]"}], "]"}]}], "]"}], ")"}], "&"}], "/@", 
+   RowBox[{"raw", "\[LeftDoubleBracket]", 
+    RowBox[{";;", ",", ";;", ",", "i"}], 
+    "\[RightDoubleBracket]"}]}]}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"scale", "=", 
+   RowBox[{"data", "[", "1", "]"}]}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"temp", "=", 
+   RowBox[{"data", "[", "2", "]"}]}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"press", "=", 
+   RowBox[{"data", "[", "3", "]"}]}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{"ListPlot", "[", 
+  RowBox[{
+   RowBox[{"{", 
+    RowBox[{"scale", ",", "press"}], "}"}], "\[Transpose]"}], 
+  "]"}], "\[IndentingNewLine]", 
+ RowBox[{"ListPlot", "[", 
+  RowBox[{
+   RowBox[{"{", 
+    RowBox[{"scale", ",", "temp"}], "}"}], "\[Transpose]"}], "]"}]}], "Input",
+ CellChangeTimes->{{3.7798296899780025`*^9, 3.7798300360398307`*^9}, 
+   3.77983007055517*^9, {3.7798301218895693`*^9, 3.7798301442518396`*^9}, {
+   3.7798301860202694`*^9, 3.779830246608697*^9}, {3.7798302978516245`*^9, 
+   3.779830326093992*^9}, {3.7798303600287013`*^9, 3.779830391786476*^9}, {
+   3.7798304369928517`*^9, 3.7798304599911857`*^9}, {3.779830496224865*^9, 
+   3.779830559319854*^9}, {3.779830592622223*^9, 3.779830846768323*^9}, {
+   3.7798310938577833`*^9, 3.779831119713065*^9}, 3.7798312641861553`*^9, {
+   3.7798312987434187`*^9, 3.779831350171562*^9}, {3.7798313810604367`*^9, 
+   3.7798313828040476`*^9}, {3.779831421809987*^9, 3.7798315577676105`*^9}, {
+   3.7798316126893153`*^9, 3.7798316137682285`*^9}, {3.7798316703963428`*^9, 
+   3.7798317436270475`*^9}, {3.779831987681135*^9, 3.779831997815584*^9}, 
+   3.7798665055304537`*^9, {3.7798736511392856`*^9, 3.779873653140658*^9}},
+ CellLabel->"In[1]:=",ExpressionUUID->"8a31ae8e-d950-4542-97f0-3ad5aac15252"]
+},
+WindowSize->{1920, 997},
+WindowMargins->{{-8, Automatic}, {Automatic, -8}},
+FrontEndVersion->"12.0 for Microsoft Windows (64-bit) (April 8, 2019)",
+StyleDefinitions->"Default.nb"
+]
+(* End of Notebook Content *)
+
+(* Internal cache information *)
+(*CellTagsOutline
+CellTagsIndex->{}
+*)
+(*CellTagsIndex
+CellTagsIndex->{}
+*)
+(*NotebookFileOutline
+Notebook[{
+Cell[558, 20, 3049, 74, 200, "Input",ExpressionUUID->"8a31ae8e-d950-4542-97f0-3ad5aac15252"]
+}
+]
+*)
+
