@@ -1,10 +1,13 @@
+include		scripts/vars.Fe3O4
+
 units		real
 atom_style	charge
 
-boundary	m m m
+boundary	p p p
 
 read_data	data_init/Fe3O4_ovito.lmp
-replicate	5 5 5
+change_box	all x scale ${scale} y scale ${scale} z scale ${scale} remap
+replicate	2 2 2
 
 pair_style	reax/c data_init/lmp_control
 pair_coeff	* * data_init/ffield.reax.Fe_O_C_H Fe O
@@ -12,15 +15,26 @@ pair_coeff	* * data_init/ffield.reax.Fe_O_C_H Fe O
 neighbor	2 bin
 neigh_modify	every 10 delay 0 check no
 
-fix		verle all nve
-fix		reax all qeq/reax 1 0.0 10.0 1.0e-6 reax/c
-fix		thermostat all temp/berendsen 100.0 100.0 10.0
+velocity	all create $T 42
+
+compute		temp all temp
+compute		press all pressure temp
 
 timestep	0.20
-thermo		100
 
-dump		ovito all atom 100 ovito_100.atom
+thermo_style	custom step temp etotal press
+thermo		${out}
 
-run		20000
+dump		ovito all atom ${out} dump.atom
 
-#write_restart Fe3O4.restart
+fix		verle all nve
+fix		reax all qeq/reax 1 0.0 10.0 1.0e-6 reax/c
+fix		thermostat all temp/csvr $T $T ${thermo_relax} 239
+
+run		${thermo_steps}
+#write_restart	Fe3O4.restart
+
+unfix		thermostat
+fix		output all print ${out} "${scale},$(c_temp),$(c_press)" file output_${T}_${scale}.csv screen no title ""
+
+run		${free_steps}

@@ -3,3 +3,4 @@ log*
 *.atom
 *.xyz
 *.restart
+*.csv

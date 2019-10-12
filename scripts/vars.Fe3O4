@@ -1,0 +1,7 @@
+variable	T equal 500
+variable	out equal 10
+variable	scale equal 1.1
+
+variable	thermo_steps equal 5000
+variable	free_steps equal 5000
+variable	thermo_relax equal 50
