@@ -1,4 +1,4 @@
-include		scripts/vars.Fe3O4
+#include		scripts/vars.Fe3O4
 
 units		real
 atom_style	charge

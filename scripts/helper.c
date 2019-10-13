@@ -2,15 +2,18 @@
 #include <stdio.h>
 
 int main(int argc, char** argv) {
-    if(argc < 4)
+    if(argc == 3 || argc > 4)
         return 0;
-    double start, end, step;
-    sscanf(argv[1], "%lf", &start);
-    sscanf(argv[2], "%lf", &end);
-    sscanf(argv[3], "%lf", &step);
-    for(double i = start; i <= end; i+= step) {
-        char cmd[2048];
-        sprintf(cmd, "scripts/measure.sh %.5lf", i);
+    double args[3];
+    for(int i = 1; i < argc; i++)
+        sscanf(argv[i], "%lf", &args[i-1]);
+    if(argc == 1)
+        args[0] = 1;
+    if(argc <= 2)
+        args[2] = args[1] = args[0];
+    for(double i = args[0]; i <= args[1]; i+= args[2]) {
+        char cmd[512];
+        sprintf(cmd, "\(echo \"variable scale string %.5lf\" && cat scripts/vars.Fe3O4 && cat scripts/in.Fe3O4) > /tmp/lmp_custom.Fe3O4 ; lmp -sf kk -k on t $(nproc) -i /tmp/lmp_custom.Fe3O4\n", i);
         system(cmd);
     }
     return 0;

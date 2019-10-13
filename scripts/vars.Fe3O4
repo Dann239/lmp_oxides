@@ -1,8 +1,8 @@
-#variable	scale equal 1
+#variable	scale string 1.00000
 variable	T equal 500
 variable	out equal 10
 
-variable	thermo_steps equal 5000
-variable	free_steps equal 15000
+variable	thermo_steps equal 10
+variable	free_steps equal 10
 variable	thermo_relax equal 50
 variable	time_step equal 0.25
