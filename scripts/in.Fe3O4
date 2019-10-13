@@ -1,4 +1,4 @@
-include		scripts/vars.Fe3O4
+#include		scripts/vars.Fe3O4
 
 units		real
 atom_style	charge
@@ -20,7 +20,7 @@ velocity	all create $T 42
 compute		temp all temp
 compute		press all pressure temp
 
-timestep	0.20
+timestep	${time_step}
 
 thermo_style	custom step temp etotal press
 thermo		${out}
