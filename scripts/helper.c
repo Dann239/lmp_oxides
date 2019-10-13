@@ -10,7 +10,7 @@ int main(int argc, char** argv) {
     sscanf(argv[3], "%lf", &step);
     for(double i = start; i <= end; i+= step) {
         char cmd[2048];
-        sprintf(cmd, "scripts/measure.sh %lf", i);
+        sprintf(cmd, "scripts/measure.sh %.5lf", i);
         system(cmd);
     }
     return 0;
