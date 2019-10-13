@@ -5,4 +5,4 @@ variable	out equal 10
 variable	thermo_steps equal 5000
 variable	free_steps equal 15000
 variable	thermo_relax equal 50
-variable    time_step 0.25
+variable	time_step equal 0.25
