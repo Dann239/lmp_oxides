@@ -5,3 +5,4 @@ log*.*
 *.restart
 *.csv
 *.pot
+*.out
