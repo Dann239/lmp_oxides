@@ -10,8 +10,8 @@
 int main(int argc, char** argv) {
     int nproc, pind;
     char mask[256];
-    char buff[2048];   
-    double args[3];     
+    char buff[2048];
+    double args[3];
 
     for(int i = 2; i < min(argc, 5); i++)
         sscanf(argv[i], "%lf", &args[i - 2]);
@@ -39,11 +39,11 @@ int main(int argc, char** argv) {
 
     for(int i = pind - 1; i < (args[1] - args[0] + 1e-6) / args[2]; i += nproc) {
         double scale = args[0] + i * args[2];
-        
+
         sprintf(buff, "output/logs/log_%.5lf.lammps", scale);
         dup2(open(buff, O_WRONLY | O_CREAT, 0644), STDOUT_FILENO);
-        
-        sprintf(cmd, "(echo \"variable scale string %.5lf\" && cat scripts/in.Fe3O4) > /scratch/pavlov/tmp/in_%d.Fe3O4 ; taskset %s lmp -i /scratch/pavlov/tmp/in_%d.Fe3O4\n", scale, pind, mask, pind);
+
+        sprintf(buff, "(echo \"variable scale string %.5lf\" && cat scripts/in.Fe3O4) > /tmp/in_%d.Fe3O4 ; taskset %s lmp -i /tmp/in_%d.Fe3O4\n", scale, pind, mask, pind);
         system(buff);
     }
 
