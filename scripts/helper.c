@@ -30,7 +30,7 @@ int main(int argc, char** argv) {
     if(args[2] <= 0 || nproc > 1024)
         return 0;
 
-    for(pind = 1; pind < nproc && fork(); pind++);
+    for(pind = 1; pind < nproc && fork(); pind++)sleep(1);
 
     memset(mask, '0', 256);
     mask[1] = 'x';
@@ -43,7 +43,7 @@ int main(int argc, char** argv) {
         sprintf(buff, "output/logs/log_%.5lf.lammps", scale);
         dup2(open(buff, O_WRONLY | O_CREAT, 0644), STDOUT_FILENO);
 
-        sprintf(buff, "(echo \"variable scale string %.5lf\" && cat scripts/in.Fe3O4) > /tmp/in_%d.Fe3O4 ; taskset %s lmp -i /tmp/in_%d.Fe3O4\n", scale, pind, mask, pind);
+        sprintf(buff, "(echo \"variable scale string %.5lf\" && cat scripts/in.Fe3O4) > /tmp/in_%d_%d.Fe3O4 ; lmp -i /tmp/in_%d_%d.Fe3O4\n", scale, pind, i, pind, i);
         system(buff);
     }
 
