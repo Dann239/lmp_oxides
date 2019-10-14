@@ -1,4 +1,4 @@
-#include		scripts/vars.Fe3O4
+include		scripts/vars.Fe3O4
 
 units		real
 atom_style	charge
@@ -25,7 +25,7 @@ timestep	${time_step}
 thermo_style	custom step temp etotal press
 thermo		${out}
 
-#dump		ovito all atom ${out} dump.atom
+dump		ovito all atom ${out} output/dumps/dump_${T}_${scale}.atom
 
 fix		verle all nve
 fix		reax all qeq/reax 1 0.0 10.0 1.0e-6 reax/c
@@ -35,6 +35,6 @@ run		${thermo_steps}
 #write_restart	Fe3O4.restart
 
 unfix		thermostat
-fix		output all print ${out} "${scale},$(c_temp),$(c_press)" file output_${T}_${scale}.csv screen no title ""
+fix		output all print ${out} "${scale},$(c_temp),$(c_press)" file output/data/data_${T}_${scale}.csv screen no title ""
 
 run		${free_steps}

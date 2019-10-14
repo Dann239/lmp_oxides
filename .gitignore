@@ -1,6 +1,7 @@
-log*
-*log
+log*.*
+*.log
 *.atom
 *.xyz
 *.restart
 *.csv
+*.pot
