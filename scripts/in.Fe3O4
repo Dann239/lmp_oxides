@@ -32,10 +32,10 @@ fix		reax all qeq/reax 1 0.0 10.0 1.0e-6 reax/c
 fix		thermostat all temp/csvr $T $T ${thermo_relax} 239
 
 run		${thermo_steps}
+write_restart	output/restarts/Fe3O4_${T}_${scale}.restart
 
 unfix		thermostat
 fix		output all print ${out} "${scale},$(c_temp),$(c_press)" file output/data/data_${T}_${scale}.csv screen no title ""
 
 run		${free_steps}
-
 write_restart	output/restarts/Fe3O4_${T}_${scale}.restart

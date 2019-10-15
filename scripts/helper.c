@@ -9,8 +9,6 @@
 
 int main(int argc, char** argv) {
     unsigned int nproc = 1, pind = 1, nsteps = 1;
-    char mask[256];
-    char buff[2048];
     double start = 1, end = 1;
 
     switch(argc) {
@@ -30,6 +28,7 @@ int main(int argc, char** argv) {
 
     for(; pind < nproc && fork(); pind++);
 
+    char mask[256];
     memset(mask, '0', 256);
     mask[1] = 'x';
     mask[(nproc - 1) / 4 + 2 - (pind - 1) / 4] = '0' + (1 << ((pind - 1) % 4));
@@ -38,12 +37,17 @@ int main(int argc, char** argv) {
     for(int i = pind - 1; i < nsteps; i += nproc) {
         double scale = start + i * (end - start) / nsteps;
 
-        sprintf(buff, "output/logs/log_%.6lf.lammps", scale);
-        dup2(open(buff, O_WRONLY | O_CREAT, 0644), STDOUT_FILENO);
-	
-        sprintf(buff, "(echo \"variable scale string %.6lf\" && cat scripts/in.Fe3O4) > /tmp/in_%d_%d.Fe3O4 ; taskset %s lmp -i /tmp/in_%d_%d.Fe3O4\n", scale, pind, (i - pind + 1) / nproc + 1, mask, pind, (i - pind + 1) / nproc + 1);
-        printf(buff);
-        system(buff);
+        char log_name[256];
+        sprintf(log_name, "output/logs/log_%.6lf.lammps", scale);
+        dup2(open(log_name, O_WRONLY | O_CREAT, 0644), STDOUT_FILENO);
+
+	char in_name[256];
+        sprintf(in_name, "/tmp/in_%d_%d", pind, (i - pind + 1) / nproc + 1);
+
+        char cmd[2048];
+        sprintf(cmd, "(echo \"variable scale string %.6lf\" && cat scripts/in.Fe3O4) > %s ; taskset %s lmp -i %s ; rm %s\n", scale, in_name, mask, in_name, in_name);
+        printf(cmd);
+        system(cmd);
     }
 
     for(int i = 1; i < nproc && pind == nproc; i++)
