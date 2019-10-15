@@ -1,0 +1,1 @@
+./scripts/launch_simulation.sh 0.9 0.92 64

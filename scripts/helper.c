@@ -36,7 +36,7 @@ int main(int argc, char** argv) {
     mask[(nproc - 1) / 4 + 3] = 0;
 
     for(int i = pind - 1; i < nsteps; i += nproc) {
-        double scale = start + i * (end - start);
+        double scale = start + i * (end - start) / nsteps;
 
         sprintf(buff, "output/logs/log_%.6lf.lammps", scale);
         dup2(open(buff, O_WRONLY | O_CREAT, 0644), STDOUT_FILENO);

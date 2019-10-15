@@ -1,0 +1,1 @@
+./scripts/launch_simulation.sh 1.06 1.1 128
