@@ -1,31 +1,29 @@
-include		scripts/vars.Fe3O4
-
 units		real
 atom_style	charge
 
 boundary	p p p
 
 read_data	data_init/Fe3O4_ovito.lmp
-change_box	all x scale ${scale} y scale ${scale} z scale ${scale} remap
-replicate	2 2 2
-
 pair_style	reax/c data_init/lmp_control
-pair_coeff	* * data_init/ffield.reax.Fe_O_C_H Fe O
+pair_coeff	* * data_init/ffield_old.reax Fe O
 
 neighbor	2 bin
 neigh_modify	every 10 delay 0 check no
 
+change_box	all x scale ${scale} y scale ${scale} z scale ${scale} remap
+replicate	2 2 2
+
 velocity	all create $T 42
 
-compute		temp all temp
-compute		press all pressure temp
+compute	temp all temp
+compute	press all pressure temp
 
 timestep	${time_step}
 
 thermo_style	custom step temp etotal press
 thermo		${out}
 
-dump		ovito all atom ${out} output/dumps/dump_${T}_${scale}.atom
+#dump		ovito all atom ${out} output/dumps/dump_${T}_${scale}.atom
 
 fix		verle all nve
 fix		reax all qeq/reax 1 0.0 10.0 1.0e-6 reax/c

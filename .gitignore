@@ -6,3 +6,5 @@ log*.*
 *.csv
 *.pot
 *.out
+tmp.lammps*
+screen.*
