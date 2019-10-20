@@ -10,6 +10,6 @@ variable	free_steps equal 25000
 variable	thermo_relax equal 100
 variable	time_step equal 0.25
 
-variable	reax_file string data_init/ffield_old.reax
+variable	reax_file string data_init/ffield_new.reax
 
 include		scripts/in.Fe3O4

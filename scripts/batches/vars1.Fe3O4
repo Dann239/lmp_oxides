@@ -1,7 +1,7 @@
 variable	scale_min equal 0.99
 variable	scale_max equal 1.11
 
-variable	T equal 500
+variable	T equal 350
 variable	nproc equal 128
 
 variable	out equal 200
