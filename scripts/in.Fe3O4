@@ -15,7 +15,7 @@ neighbor	2 bin
 neigh_modify	every 10 delay 0 check no
 
 change_box	all x scale ${scale} y scale ${scale} z scale ${scale} remap
-replicate	5 5 5
+replicate	${replicate} ${replicate} ${replicate}
 
 velocity	all create $T 42
 
@@ -27,17 +27,17 @@ timestep	${time_step}
 thermo_style	custom step temp etotal press
 thermo		${out}
 
-dump		ovito all atom ${out} output/dumps/dump_${T}_${scale}.atom
+dump		ovito all atom ${out} output/dumps/dump_${T}_${scale}_${postfix}.atom
 
 fix		verle all nve
 fix		reax all qeq/reax 1 0.0 10.0 1.0e-6 reax/c
 fix		thermostat all temp/csvr $T $T ${thermo_relax} 239
 
 run		${thermo_steps}
-write_restart	output/restarts/Fe3O4_${T}_${scale}.restart
+write_restart	output/restarts/Fe3O4_${T}_${scale}_${postfix}.restart
 
 unfix		thermostat
-fix		output all print ${out} "${scale},$(c_temp),$(c_press)" file output/data/data_${T}_${scale}.csv screen no title ""
+fix		output all print ${out} "${scale},$(c_temp),$(c_press)" file output/data/data_${T}_${scale}_${postfix}.csv screen no title ""
 
 run		${free_steps}
-write_restart	output/restarts/Fe3O4_${T}_${scale}.restart
+write_restart	output/restarts/Fe3O4_${T}_${scale}_${postfix}.restart

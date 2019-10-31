@@ -1,7 +1,7 @@
 variable	scale_min equal 1.035
 variable	scale_max equal 1.045
 
-variable	T equal 500
+variable	T equal 200
 variable	nproc equal 32
 
 variable	replicate equal 5
