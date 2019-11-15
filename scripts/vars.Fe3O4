@@ -1,18 +1,18 @@
-variable	scale_min equal 1.035
-variable	scale_max equal 1.045
+variable	scale_min equal 1.03706
+variable	scale_max equal 1.03706
 
-variable	T equal 500
-variable	nproc equal 32
+variable	T equal 900
+variable	nproc equal 1
 
 variable	replicate equal 5
 
-variable	out equal 200
+variable	out equal 50
 variable	thermo_steps equal 30000
 variable	free_steps equal 30000
 variable	thermo_relax equal 100
 variable	time_step equal 0.25
 
-variable 	postfix string try4old
+variable	postfix string try5
 variable	reax_file string data_init/ffield_old.reax
 
 include		scripts/in.Fe3O4
