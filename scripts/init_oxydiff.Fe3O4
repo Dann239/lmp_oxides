@@ -6,9 +6,9 @@ variable	free_steps equal 30000
 variable	thermo_relax equal 100
 variable	time_step equal 0.25
 
-variable	postfix string nodiff
+variable	postfix string oxydiff
 variable	reax_file string data_init/ffield_old.reax
-variable	lattice_file string data_init/Fe3O4_ovito.lmp
+variable	lattice_file string data_init/Fe3O4_vacant.lmp
 
 include		scripts/relax.Fe3O4
 
