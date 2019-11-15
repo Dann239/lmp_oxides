@@ -2,7 +2,6 @@ newton		on
 units		real
 atom_style	charge
 
-variable	thread uloop ${nproc}
 variable	scale equal 1.03582+0.00000400253*$T
 
 boundary	p p p
@@ -23,16 +22,16 @@ timestep	${time_step}
 thermo_style	custom step temp etotal press
 thermo		${out}
 
-dump		ovito all atom ${out} output/dumps/dump${T}${postfix}.atom
 
 fix		verle all nve
 fix		reax all qeq/reax 1 0.0 10.0 1.0e-6 reax/c
 fix		thermostat all temp/csvr $T $T ${thermo_relax} 239
 
+dump		ovito all atom ${out} output/dumps/dump${T}${postfix}_relax.atom
+
 run		${thermo_steps}
-write_restart	output/restarts/Fe3O4${T}${postfix}.restart
-
 unfix		thermostat
-
 run		${free_steps}
+
 write_restart	output/restarts/Fe3O4${T}${postfix}.restart
+

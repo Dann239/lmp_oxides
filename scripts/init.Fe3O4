@@ -1,6 +1,3 @@
-variable	T equal 900
-variable	nproc equal 1
-
 variable	replicate equal 5
 
 variable	out equal 50
@@ -9,8 +6,13 @@ variable	free_steps equal 30000
 variable	thermo_relax equal 100
 variable	time_step equal 0.25
 
-variable	postfix string default
+variable	postfix string nodiff
 variable	reax_file string data_init/ffield_old.reax
 variable	lattice_file string data_init/Fe3O4_ovito.lmp
 
-include		scripts/in.Fe3O4
+include		scripts/relax.Fe3O4
+
+variable	nproc equal 1
+variable	thread uloop ${nproc}
+variable	T equal 900
+
