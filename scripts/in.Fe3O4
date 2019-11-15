@@ -2,12 +2,12 @@ newton		on
 units		real
 atom_style	charge
 
-variable        thread uloop ${nproc}
-variable        scale equal (${scale_min}+(${thread}-1)/${nproc}*(${scale_max}-${scale_min}))
+variable	thread uloop ${nproc}
+variable	scale equal 1.03582+0.00000400253*$T
 
 boundary	p p p
 
-read_data	data_init/Fe3O4_ovito.lmp
+read_data	${lattice_file}
 pair_style	reax/c data_init/lmp_control
 pair_coeff	* * ${reax_file} Fe O
 
@@ -18,26 +18,21 @@ change_box	all x scale ${scale} y scale ${scale} z scale ${scale} remap
 replicate	${replicate} ${replicate} ${replicate}
 
 velocity	all create $T 42
-
-compute		temp all temp
-compute		press all pressure temp
-
 timestep	${time_step}
 
 thermo_style	custom step temp etotal press
 thermo		${out}
 
-dump		ovito all atom ${out} output/dumps/dump_${T}_${scale}_${postfix}.atom
+dump		ovito all atom ${out} output/dumps/dump${T}${postfix}.atom
 
 fix		verle all nve
 fix		reax all qeq/reax 1 0.0 10.0 1.0e-6 reax/c
 fix		thermostat all temp/csvr $T $T ${thermo_relax} 239
 
 run		${thermo_steps}
-write_restart	output/restarts/Fe3O4_${T}_${scale}_${postfix}.restart
+write_restart	output/restarts/Fe3O4${T}${postfix}.restart
 
 unfix		thermostat
-fix		output all print ${out} "${scale},$(c_temp),$(c_press)" file output/data/data_${T}_${scale}_${postfix}.csv screen no title ""
 
 run		${free_steps}
-write_restart	output/restarts/Fe3O4_${T}_${scale}_${postfix}.restart
+write_restart	output/restarts/Fe3O4${T}${postfix}.restart

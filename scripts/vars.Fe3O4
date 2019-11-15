@@ -1,6 +1,3 @@
-variable	scale_min equal 1.03706
-variable	scale_max equal 1.03706
-
 variable	T equal 900
 variable	nproc equal 1
 
@@ -12,7 +9,8 @@ variable	free_steps equal 30000
 variable	thermo_relax equal 100
 variable	time_step equal 0.25
 
-variable	postfix string try5
+variable	postfix string default
 variable	reax_file string data_init/ffield_old.reax
+variable	lattice_file string data_init/Fe3O4_ovito.lmp
 
 include		scripts/in.Fe3O4
