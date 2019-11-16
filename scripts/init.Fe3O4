@@ -1,8 +1,8 @@
 variable	replicate equal 1
 
 variable	out equal 50
-variable	thermo_steps equal 50000
-variable	free_steps equal 100000
+variable	thermo_steps equal 1000
+variable	free_steps equal 1000
 variable	thermo_relax equal 100
 variable	time_step equal 0.25
 
@@ -16,5 +16,5 @@ variable	T equal 900
 
 variable	scale equal 1.03582+0.00000400253*$T
 
-include		scripts/relax.Fe3O4
+include		scripts/restart.Fe3O4
 

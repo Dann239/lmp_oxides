@@ -1,0 +1,26 @@
+newton		on
+units		real
+atom_style	charge
+
+read_restart	output/restarts/Fe3O4${T}${postfix}.restart
+
+pair_style	reax/c data_init/lmp_control
+pair_coeff	* * ${reax_file} Fe O
+
+neighbor	2 bin
+neigh_modify	every 10 delay 0 check no
+
+timestep	${time_step}
+
+thermo_style	custom step temp etotal press
+thermo		${out}
+
+fix		verle all nve
+fix		reax all qeq/reax 1 0.0 10.0 1.0e-6 reax/c
+
+dump		ovito all atom ${out} output/dumps/dump${T}${postfix}.atom
+
+run		${free_steps}
+
+write_restart	output/restarts/Fe3O4${T}${postfix}.restart
+
