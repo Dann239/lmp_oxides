@@ -27,11 +27,12 @@ fix		verle all nve
 fix		reax all qeq/reax 1 0.0 10.0 1.0e-6 reax/c
 fix		thermostat all temp/csvr $T $T ${thermo_relax} 239
 
-dump		ovito all atom ${out} output/dumps/dump${T}${postfix}_relax.atom
-
 run		${thermo_steps}
 unfix		thermostat
+run		${relax_steps}
+dump		ovito all atom ${out} output/dumps/dump${T}${postfix}.atom
 run		${free_steps}
+
 
 write_restart	output/restarts/Fe3O4${T}${postfix}.restart
 
