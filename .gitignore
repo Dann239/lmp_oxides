@@ -9,3 +9,5 @@ log*.*
 tmp.lammps*
 screen.*
 .idea
+.vscode
+venv
