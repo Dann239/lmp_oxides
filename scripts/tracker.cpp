@@ -41,6 +41,9 @@ struct vec {
     double len() {
         return sqrt(p[0] * p[0] + p[1] * p[1] + p[2] * p[2]);
     }
+    double len2() {
+        return p[0] * p[0] + p[1] * p[1] + p[2] * p[2];
+    }
 };
 struct atom {
     vec pos;
@@ -78,9 +81,16 @@ struct series {
     double side;
     vector<vector<atom> > data;
     vector<vector<atom> > travels;
+    bool error;
     series(string filename, int _nvac) {
+        error = false;
         nvac = _nvac;
         ifstream in(filename);
+        if(!in.is_open()) {
+            cerr << "ERROR: file not found" << endl;
+            error = true;
+            return;
+        }
         for(int i = 0;; i++) {
             int n;
             in >> n;
@@ -98,6 +108,11 @@ struct series {
             }
         }
         in.close();
+        if(data.size() == 0) {
+            cerr << "ERROR: unstable lattice" << endl;
+            error = true;
+            return;
+        }
         travels.push_back(data[0]);
         for(int i = 1; i < data.size(); i++) {
             travels.push_back(travels[i - 1]);
@@ -119,14 +134,59 @@ struct series {
                 data[i][min_i].tnum = j;
             }
         }
-        for(int i = 0; i < travels.size(); i++) {
-            cout << travels[i].size() << "\n\n";
-            for(int j = 0; j < travels[i].size(); j++)
-                cout << (int)travels[i][j].type + 1 << ' ' << travels[i][j].pos.p[0] << ' ' << travels[i][j].pos.p[1] << ' ' << travels[i][j].pos.p[2] << endl;
-        }
+        cout << "Imported from " << filename << endl;
     }
 
+    void export_xyz(string filename) {
+        if(error)
+            return;
+        ofstream out(filename);
+        for(int i = 0; i < travels.size(); i++) {
+            out << travels[i].size() << "\n\n";
+            for(int j = 0; j < travels[i].size(); j++)
+                out << (int)travels[i][j].type + 1 << ' ' << travels[i][j].pos.p[0] << ' ' << travels[i][j].pos.p[1] << ' ' << travels[i][j].pos.p[2] << endl;
+        }
+        out.close();
+        cout << "Exported to " << filename << endl;
+    }
+
+    void diff_data(string filename, bool type) {
+        if(error)
+            return;
+        vector<vector<double> > r2(travels.size());
+        for(int i = 0; i < travels.size(); i++)
+            for(int j = 0; j < travels.size(); j++)
+                if(j + i < travels.size())
+                    for(int k = 0; k < travels[j].size(); k++)
+                        if(travels[j][k].type == type)
+                            r2[i].push_back((travels[j + i][k].pos - travels[j][k].pos).len2());
+        vector<double> res(travels.size(), 0);
+        for(int i = 0; i < r2.size(); i++)
+            for(int j = 0; j < r2[i].size(); j++)
+                res[i] += r2[i][j] / r2[i].size();
+        vector<double> err(travels.size(), 0);
+        for(int i = 0; i < r2.size(); i++) {
+            for(int j = 0; j < r2[i].size(); j++)
+                err[i] = (res[i] - r2[i][j]) * (res[i] - r2[i][j]) / r2[i].size();
+            err[i] = sqrt(err[i]);
+        }
+
+        ofstream out(filename);
+        for(int i = 0; i < res.size(); i++)
+            out<<res[i]<<','<<err[i]<<endl;
+        out.close();
+        cout << "Exported to " << filename << endl;
+    }
 };
 int main() {
-    series s("output/results/res1500.xyz", 7);
+    string path = "output/results/";
+    string input_prefix = path + "raw/raw";
+    string output_prefix = path + "diff/diff";
+    string dump_prefix = path + "track/track";
+    string temps[14] = {"800", "900", "1000", "1100", "1200", "1300", "1400", "1425", "1450", "1475", "1500", "1525", "1550", "1575"};
+    for(int i = 0; i < 14; i++) {
+        series s(input_prefix + temps[i] + ".xyz", 7);
+        s.diff_data(output_prefix + temps[i] + ".csv", true);
+        s.export_xyz(dump_prefix + temps[i] + ".xyz");
+    }
 }

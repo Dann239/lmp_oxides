@@ -22,17 +22,26 @@ timestep	${time_step}
 thermo_style	custom step temp etotal press
 thermo		${out}
 
+compute		temp all temp
+compute		press all pressure temp
 
 fix		verle all nve
 fix		reax all qeq/reax 1 0.0 10.0 1.0e-6 reax/c
 fix		thermostat all temp/csvr $T $T ${thermo_relax} 239
 
+dump		reference all atom ${out} output/reference/dump${T}reference.atom
+run		0
+undump		reference
+
 run		${thermo_steps}
 unfix		thermostat
 run		${relax_steps}
+
 dump		ovito all atom ${out} output/dumps/dump${T}${postfix}.atom
+fix		output all print ${out} "${scale},$(c_temp),$(c_press)" file output/results/log_${T}${postfix}.csv screen no title ""
+
 run		${free_steps}
 
 
-write_restart	output/restarts/Fe3O4${T}${postfix}.restart
+write_restart	output/restarts/Fe3O4_${T}${postfix}.restart
 

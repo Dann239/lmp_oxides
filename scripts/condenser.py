@@ -18,8 +18,9 @@ def re_dump(name, ref, out):
                 columns=["Particle Type", "Position.X", "Position.Y", "Position.Z", "Occupancy.1", "Occupancy.2"], multiple_frames=True)
 
 
-for i in ["800", "900", "1000", "1100", "1200", "1300", "1400", "1500"]:
-    re_dump("output/dumps/dump" + i + "diff.atom",
-            "output/dumps/dump" + i + "reference.atom",
-            "output/results/res" + i + ".xyz")
+for i in ["800", "900", "1000", "1100", "1200", "1300", "1400", "1425", "1450", "1475", "1500", "1525", "1550", "1575", "1600", "1700", "1800", "1900"]:
+    re_dump("output/dumps/dump" + i + ".atom",
+            "output/reference/dump" + i + "reference.atom",
+            "output/results/raw/raw" + i + ".xyz")
     print(i)
+
