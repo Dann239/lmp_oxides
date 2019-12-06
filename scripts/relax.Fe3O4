@@ -7,6 +7,8 @@ boundary	p p p
 read_data	${lattice_file}
 reset_ids
 
+shell		mkdir output output/dumps output/results output/restarts
+
 pair_style	reax/c data_init/lmp_control
 pair_coeff	* * ${reax_file} Fe O
 
@@ -37,7 +39,6 @@ dump		ovito all atom ${out} output/dumps/dump${T}${postfix}.atom
 fix		output all print ${out} "${scale},$(c_temp),$(c_press)" file output/results/log_${T}${postfix}.csv screen no title ""
 
 run		${free_steps}
-
 
 write_restart	output/restarts/Fe3O4_${T}${postfix}.restart
 
