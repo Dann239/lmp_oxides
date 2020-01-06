@@ -1,6 +1,6 @@
 variable	replicate equal 1
 
-variable	out equal 50
+variable	out equal 500
 variable	thermo_steps equal 50000
 variable	relax_steps equal 50000
 variable	free_steps equal 4000000
@@ -9,7 +9,7 @@ variable	time_step equal 0.25
 
 variable	postfix string long
 variable	reax_file string data_init/ffield_old.reax
-variable	lattice_file string data_init/Fe3O4_ovito_big_thinned.lmp
+variable	lattice_file string data_init/Fe3O4_ovito_medium_thinned.lmp
 
 variable	nproc equal 1
 variable	thread uloop ${nproc}

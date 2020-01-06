@@ -52,8 +52,8 @@ struct atom {
     int tnum;
     atom(ifstream& in, vector<atom>& pool) {
         tnum = -1;
-        int t; in >> t;
-        type = t - 1;
+        string t; in >> t;
+        type = t == "O" || t == "2";
         in >> pos.p[0] >> pos.p[1] >> pos.p[2];
         in >> deviation[0] >> deviation[1];
         deviation[type]--;
@@ -108,6 +108,7 @@ struct series {
             }
         }
         in.close();
+        cout << "Imported from " << filename << endl;
         if(data.size() == 0) {
             cerr << "ERROR: unstable lattice" << endl;
             error = true;
@@ -134,7 +135,6 @@ struct series {
                 data[i][min_i].tnum = j;
             }
         }
-        cout << "Imported from " << filename << endl;
     }
 
     void export_xyz(string filename) {
@@ -153,27 +153,24 @@ struct series {
     void diff_data(string filename, bool type) {
         if(error)
             return;
-        vector<vector<double> > r2(travels.size());
-        for(int i = 0; i < travels.size(); i++)
+        vector<double> res(travels.size(), 0);
+        for(int i = 0; i < travels.size(); i+=100) {
+            cout << i + 1 << " out of " << travels.size() << endl;
+            vector<double> r2;
             for(int j = 0; j < travels.size(); j++)
                 if(j + i < travels.size())
                     for(int k = 0; k < travels[j].size(); k++)
                         if(travels[j][k].type == type)
-                            r2[i].push_back((travels[j + i][k].pos - travels[j][k].pos).len2());
-        vector<double> res(travels.size(), 0);
-        for(int i = 0; i < r2.size(); i++)
-            for(int j = 0; j < r2[i].size(); j++)
-                res[i] += r2[i][j] / r2[i].size();
-        vector<double> err(travels.size(), 0);
-        for(int i = 0; i < r2.size(); i++) {
-            for(int j = 0; j < r2[i].size(); j++)
-                err[i] = (res[i] - r2[i][j]) * (res[i] - r2[i][j]) / r2[i].size();
-            err[i] = sqrt(err[i]);
+                            r2.push_back((travels[j + i][k].pos - travels[j][k].pos).len2());
+            for(int i = 0; i < r2.size(); i++)
+                for(int j = 0; j < r2.size(); j++)
+                    res[i] += r2[j] / r2.size();
         }
+
 
         ofstream out(filename);
         for(int i = 0; i < res.size(); i++)
-            out<<res[i]<<','<<err[i]<<endl;
+            out<<res[i]<<endl;
         out.close();
         cout << "Exported to " << filename << endl;
     }
@@ -183,10 +180,10 @@ int main() {
     string input_prefix = path + "raw/raw";
     string output_prefix = path + "diff/diff";
     string dump_prefix = path + "track/track";
-    string temps[14] = {"800", "900", "1000", "1100", "1200", "1300", "1400", "1425", "1450", "1475", "1500", "1525", "1550", "1575"};
-    for(int i = 0; i < 14; i++) {
-        series s(input_prefix + temps[i] + ".xyz", 7);
-        s.diff_data(output_prefix + temps[i] + ".csv", true);
+    string temps[] = {"1500"};
+    for(int i = 0; i < sizeof(temps) / sizeof(string); i++) {
+        series s(input_prefix + temps[i] + ".xyz", 1);
         s.export_xyz(dump_prefix + temps[i] + ".xyz");
+        s.diff_data(output_prefix + temps[i] + ".csv", true);
     }
 }

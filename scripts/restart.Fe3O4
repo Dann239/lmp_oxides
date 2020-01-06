@@ -22,7 +22,7 @@ fix		verle all nve
 fix		reax all qeq/reax 1 0.0 10.0 1.0e-6 reax/c
 
 dump		ovito all atom ${out} output/dumps/dump${T}${postfix}.atom
-fix		output all print ${out} "${scale},$(c_temp),$(c_press)" file output/results/log_${T}${postfix}.csv screen no title ""
+fix		output all print ${out} "${scale},$(c_temp),$(c_press)" file output/results/logs/log_${T}${postfix}.csv screen no title ""
 
 run		${free_steps}
 
