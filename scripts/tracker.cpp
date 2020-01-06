@@ -182,8 +182,8 @@ int main() {
     string dump_prefix = path + "track/track";
     string temps[] = {"1500"};
     for(int i = 0; i < sizeof(temps) / sizeof(string); i++) {
-        series s(input_prefix + temps[i] + ".xyz", 1);
-        s.export_xyz(dump_prefix + temps[i] + ".xyz");
-        s.diff_data(output_prefix + temps[i] + ".csv", true);
+        series s(input_prefix + temps[i] + "big.xyz", 1);
+        s.export_xyz(dump_prefix + temps[i] + "big.xyz");
+        s.diff_data(output_prefix + temps[i] + "big.csv", true);
     }
 }
