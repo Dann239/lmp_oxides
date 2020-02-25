@@ -31,6 +31,12 @@ struct vec {
     void operator/=(double c) {
         *this = *this / c;
     }
+    bool operator==(vec v) {
+        return (*this - v).len2() < 1e-10;
+    }
+    bool operator!=(vec v) {
+        return !(*this == v);
+    }
     vec _round() {
         return {round(p[0]), round(p[1]), round(p[2])};
     }
@@ -75,22 +81,27 @@ struct atom {
             pool.push_back(*this);
     }
 };
+struct jump {
+    vec delta;
+    int time;
+};
 
+template <int nvec>
 struct series {
-    int nvac;
     double side;
     vector<vector<atom> > data;
     vector<vector<atom> > travels;
+    vector<jump> jumps[nvec];
     bool error;
-    series(string filename, int _nvac) {
+    series(string filename) {
         error = false;
-        nvac = _nvac;
         ifstream in(filename);
         if(!in.is_open()) {
             cerr << "ERROR: file not found" << endl;
             error = true;
             return;
         }
+        
         for(int i = 0;; i++) {
             int n;
             in >> n;
@@ -102,11 +113,12 @@ struct series {
             data.push_back(vector<atom>());
             for(int j = 0; j < n; j++)
                 atom(in, data[i]);
-            if(data[0].size() != nvac) {
+            if(data[0].size() != nvec) {
                 data.clear();
                 i--;
             }
         }
+        
         in.close();
         cout << "Imported from " << filename << endl;
         if(data.size() == 0) {
@@ -114,6 +126,7 @@ struct series {
             error = true;
             return;
         }
+        
         travels.push_back(data[0]);
         for(int i = 1; i < data.size(); i++) {
             travels.push_back(travels[i - 1]);
@@ -135,6 +148,15 @@ struct series {
                 data[i][min_i].tnum = j;
             }
         }
+        
+        for(int i = 1; i < travels.size(); i++)
+            for(int j = 0; j < travels[i].size(); j++)
+                if(travels[i][j].pos != travels[i - 1][j].pos)
+                    jumps[j].push_back(jump{travels[i][j].pos - travels[i - 1][j].pos, i});
+        
+        for(int j = 0; j < nvec; j++)
+            for(int i = jumps[j].size() - 1; i >= 1; i--)
+                jumps[j][i].time -= jumps[j][i - 1].time;
     }
 
     void export_xyz(string filename) {
@@ -153,18 +175,18 @@ struct series {
     void diff_data(string filename, bool type) {
         if(error)
             return;
-        vector<double> res(travels.size(), 0);
-        for(int i = 0; i < travels.size(); i+=100) {
-            cout << i + 1 << " out of " << travels.size() << endl;
+        vector<double> res;
+        for(int i = 0; i < travels.size(); i++) {
             vector<double> r2;
             for(int j = 0; j < travels.size(); j++)
                 if(j + i < travels.size())
                     for(int k = 0; k < travels[j].size(); k++)
                         if(travels[j][k].type == type)
                             r2.push_back((travels[j + i][k].pos - travels[j][k].pos).len2());
-            for(int i = 0; i < r2.size(); i++)
-                for(int j = 0; j < r2.size(); j++)
-                    res[i] += r2[j] / r2.size();
+            double resb = 0;
+            for(int j = 0; j < r2.size(); j++)
+                resb += r2[j] / r2.size();
+            res.push_back(resb);
         }
 
 
@@ -174,16 +196,31 @@ struct series {
         out.close();
         cout << "Exported to " << filename << endl;
     }
+
+    void jump_data(string filename, bool type) {
+        if(error)
+            return;
+        ofstream out(filename);
+        for(int i = 0; i < nvec; i++)
+            for(int j = 0; j < jumps[i].size(); j++)
+                if(type == travels[0][i].type)
+                    out << jumps[i][j].time << ' ' << jumps[i][j].delta.len() << endl;
+        out.close();
+        cout << "Exported to " << filename << endl;
+    }
 };
 int main() {
     string path = "output/results/";
     string input_prefix = path + "raw/raw";
-    string output_prefix = path + "diff/diff";
-    string dump_prefix = path + "track/track";
+    string diff_prefix = path + "diff/diff";
+    string track_prefix = path + "track/track";
+    string jump_prefix = path + "jumps/jumps";
+    string postfix = "medium";
     string temps[] = {"1500"};
     for(int i = 0; i < sizeof(temps) / sizeof(string); i++) {
-        series s(input_prefix + temps[i] + "big.xyz", 1);
-        s.export_xyz(dump_prefix + temps[i] + "big.xyz");
-        s.diff_data(output_prefix + temps[i] + "big.csv", true);
+        series<1> s(input_prefix + temps[i] + postfix + ".xyz");
+        s.diff_data(diff_prefix + temps[i] + postfix + ".csv", true);
+        s.export_xyz(track_prefix + temps[i] + postfix + ".xyz");
+        s.jump_data(jump_prefix + temps[i] + postfix + ".csv", true);
     }
 }
