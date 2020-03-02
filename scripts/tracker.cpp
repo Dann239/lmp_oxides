@@ -166,7 +166,7 @@ struct series {
         for(int i = 0; i < travels.size(); i++) {
             out << travels[i].size() << "\n\n";
             for(int j = 0; j < travels[i].size(); j++)
-                out << (int)travels[i][j].type + 1 << ' ' << travels[i][j].pos.p[0] << ' ' << travels[i][j].pos.p[1] << ' ' << travels[i][j].pos.p[2] << endl;
+                out << (int)travels[i][j].type + 1 << ',' << travels[i][j].pos.p[0] << ',' << travels[i][j].pos.p[1] << ',' << travels[i][j].pos.p[2] << endl;
         }
         out.close();
         cout << "Exported to " << filename << endl;
@@ -204,7 +204,7 @@ struct series {
         for(int i = 0; i < nvec; i++)
             for(int j = 0; j < jumps[i].size(); j++)
                 if(type == travels[0][i].type)
-                    out << jumps[i][j].time << ' ' << jumps[i][j].delta.len() << endl;
+                    out << jumps[i][j].time << ',' << jumps[i][j].delta.len() << endl;
         out.close();
         cout << "Exported to " << filename << endl;
     }
@@ -215,12 +215,12 @@ int main() {
     string diff_prefix = path + "diff/diff";
     string track_prefix = path + "track/track";
     string jump_prefix = path + "jumps/jumps";
-    string postfix = "medium";
-    string temps[] = {"1500"};
-    for(int i = 0; i < sizeof(temps) / sizeof(string); i++) {
-        series<1> s(input_prefix + temps[i] + postfix + ".xyz");
-        s.diff_data(diff_prefix + temps[i] + postfix + ".csv", true);
-        s.export_xyz(track_prefix + temps[i] + postfix + ".xyz");
-        s.jump_data(jump_prefix + temps[i] + postfix + ".csv", true);
+    string postfixes[] = {"medium", "smol", "big", "long"};
+    string temp = "1500";
+    for(int i = 0; i < sizeof(postfixes) / sizeof(string); i++) {
+        series<1> s(input_prefix + temp + postfixes[i] + ".xyz");
+        s.diff_data(diff_prefix + temp + postfixes[i] + ".csv", true);
+        s.export_xyz(track_prefix + temp + postfixes[i] + ".xyz");
+        s.jump_data(jump_prefix + temp + postfixes[i] + ".csv", true);
     }
 }
